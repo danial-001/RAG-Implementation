@@ -1,60 +1,95 @@
-:
+# 🧠 Legal Document Q&A System (RAG-based) – FLAN-T5 Implementation
 
-🧠 Legal RAG System (Retrieval-Augmented Generation)
-📌 Project Overview
-This project implements a Retrieval-Augmented Generation (RAG) pipeline designed to assist with legal document analysis. Given a user’s legal query, the system:
+This project is a Retrieval-Augmented Generation (RAG) system designed to answer legal questions from court judgments in PDF format. Using Google’s `FLAN-T5` for answer generation and Gemini Embeddings + FAISS for document retrieval, it enables users to ask natural language queries and get legal summaries based on actual legal documents.
 
-Retrieves relevant context from legal PDFs,
+---
 
-Generates legal-style answers using a language model.
+## 🔧 Technologies Used
 
-The goal is to provide helpful legal answers using open-source tools and free APIs.
+- 🧾 **PDF Parsing**: `PyMuPDF` (`fitz`)
+- 🧠 **Embeddings**: Google `Gemini` model (`embedding-001`)
+- 📚 **Similarity Search**: `FAISS` (L2 Index)
+- 🤖 **Answer Generation**: `google/flan-t5-large` from HuggingFace
+- 📓 **Platform**: Google Colab (Single Notebook)
 
-🔧 Technologies Used
-Component	Tool/Library
-Language Model	google/flan-t5-large (for answer generation)
-Embedding Model	Google Gemini API (models/embedding-001)
-Vector DB	FAISS for similarity search
-PDF Parsing	PyMuPDF (fitz)
-Platform	Google Colab (Python Notebook)
+---
 
-📁 Data Processing Flow
-Load Legal PDFs from Google Drive (limit 50).
+## ⚙️ How it Works
 
-Extract Text using PyMuPDF.
+1. **PDF Ingestion**: Loads up to 50 court PDF files from Google Drive.
+2. **Chunking**: Breaks each document into ~500-word chunks.
+3. **Embedding**: Generates vector embeddings for each chunk using Gemini's `embedding-001`.
+4. **Indexing**: Stores all vectors in a FAISS index using L2 (Euclidean) distance.
+5. **Querying**: Converts the user’s legal query to a vector and retrieves top 5 most relevant chunks.
+6. **Answer Generation**: Constructs a prompt and feeds it to `FLAN-T5` to generate a legal-style summary answer.
 
-Chunk Text into 500-word segments.
+---
 
-Generate Embeddings for each chunk using Gemini's embedding API.
+## 🧪 Example Queries and Answers
 
-Store in FAISS for fast similarity-based retrieval.
+### **Query 1:**
+**Q:** What were the legal findings in the construction dispute between Galaxy Communities and Chelliah?
 
-On query, embed the question and retrieve top 5 similar chunks.
+**A:**  
+The Court of Justice of Ontario found that Mr. Chelliah had proven damages of $288,577.10, including HST, and is entitled to judgment against Galaxy for the same amount, plus pre-judgment interest pursuant to the Courts of Justice Act, RSO 1990, c.
 
-Generate an answer using FLAN-T5 based on the retrieved context.
+---
 
-🧪 Sample Queries
-📄 Query 1:
-Question: "Why was the Nawaz case dismissed?"
+### **Query 2:**
+**Q:** Why was the Nawaz case dismissed?
 
-Answer:
+**A:**  
+The Defendants moved under Rule 20 of the Rules of Civil Procedure for an Order dismissing the action. The claim involved solicitor’s negligence against Keith Juriansz and damages against Vault Capital Inc. and 2439857 Ontario Inc., their former mortgagee.
 
-The court dismissed the Nawaz case because the plaintiffs filed the action after the limitation period had expired. Additionally, the court found no negligence or breach of legal duty by the defendants and determined that the plaintiffs had not suffered damages due to their representation.
+---
 
-📄 Query 2:
-Question: "What was the judgment in the Galaxy vs Chelliah case?"
+## ✅ Project Highlights
 
-Answer:
+- ✔️ Uses **open-source/free tools** (FLAN-T5, Gemini, FAISS) – no API costs.
+- ✔️ Handles unstructured PDF documents and makes them searchable.
+- ✔️ Answers are **context-aware**, derived directly from court documents.
+- ✔️ Fully self-contained in **a single Google Colab notebook**.
 
-Mr. Chelliah was awarded $288,577.10 in damages, including HST, against Galaxy. Galaxy was also ordered to pay $45,282.27 in legal costs. The judgment included pre-judgment interest and was based on proven contractual breaches.
+---
 
-💡 Why FLAN-T5?
-Due to API budget constraints, we used google/flan-t5-large for generation instead of paid models like ChatGPT or Gemini Pro. FLAN-T5 is open-source and suitable for prototyping, though not as powerful as proprietary models.
+## 📁 Project Structure
 
-📌 Limitations & Future Improvements
-FLAN-T5 can be replaced by more advanced models (e.g., Gemini Pro or Claude) for better generation quality.
+This project does not use folders. It’s built in a single Google Colab notebook for simplicity. All operations from loading PDFs to answer generation are handled in sequence.
 
-A frontend UI can be added for easier interaction.
+---
 
-Document ingestion can be made dynamic via file upload.
+## ❓ Why FLAN-T5?
 
+FLAN-T5 is used for answer generation due to:
+- Free availability
+- No need for API keys
+- Works well for structured question answering
+
+⚠️ **Note**: While FLAN-T5 is effective for prototyping, performance may be lower than commercial models like Gemini Pro or ChatGPT.
+
+---
+
+## 📌 Next Steps / Improvements
+
+- Add citation mapping to chunks for verifiability.
+- Use paid models (e.g., Gemini Pro) for production-grade accuracy.
+- Build a lightweight web UI using Gradio or Streamlit.
+
+---
+
+## 🗃️ Assignment Objective
+
+This implementation fulfills the task from **Jinnah Tech’s ML Expert assignment**:
+> *"Build a system to generate legal answers from PDFs using retrieval and generation."*
+
+---
+
+## 📤 How to Run
+
+Upload your court PDFs to Google Drive → Set your `pdf_folder` path → Run all cells in the notebook.
+
+---
+
+## 📄 License
+
+This project is built for educational & evaluation purposes.
